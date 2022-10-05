@@ -1,4 +1,4 @@
-package main
+package hello
 
 import "fmt"
 
@@ -6,6 +6,7 @@ const englishGreeting = "Hello"
 const spanishGreeting = "Hola"
 const frenchGreeting = "Bonjour"
 
+// Says hello in a few different languages
 func Hello(s string, l string) string {
 	if s == "" {
 		s = "world"
