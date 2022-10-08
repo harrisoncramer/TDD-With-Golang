@@ -11,6 +11,11 @@ type Rectangle struct {
 	Height float64
 }
 
+type Triangle struct {
+	Sides float64
+	Base  float64
+}
+
 /*
 In Golang, type resolution is implicit,
 we don't have to "tell" the compiler that
@@ -29,6 +34,10 @@ func (r Rectangle) Area() float64 {
 	return r.Height * r.Width
 }
 
+func (t Triangle) Area() float64 {
+	return (t.Base * t.Sides) / 2
+}
+
 func (c Circle) Perimeter() float64 {
 	return (2.0 * c.Radius) * math.Pi
 }
@@ -37,10 +46,6 @@ func (r Rectangle) Perimeter() float64 {
 	return 2 * (r.Width + r.Height)
 }
 
-func Perimeter(r Rectangle) float64 {
-	return 2 * (r.Width + r.Height)
-}
-
-func Area(r Rectangle) float64 {
-	return r.Height * r.Width
+func (t Triangle) Perimeter() float64 {
+	return t.Base + (t.Sides * 2)
 }

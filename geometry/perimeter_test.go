@@ -38,18 +38,26 @@ func TestArea(t *testing.T) {
 	Golang, we could also iterate over a struct
 	and use the keys as the test names: https://github.com/golang/go/wiki/TableDrivenTests */
 	areaTests := []struct {
+		name  string
 		shape Shape
 		want  float64
 	}{
-		{shape: Rectangle{10.0, 3.0}, want: 30.0},
-		{shape: Circle{3.0}, want: 28.274333882308138},
+		{name: "Rectangle", shape: Rectangle{Width: 10.0, Height: 3.0}, want: 30.0},
+		{name: "Circle", shape: Circle{Radius: 3.0}, want: 28.274333882308138},
+		{
+			name:  "Triangle",
+			shape: Triangle{Sides: 1, Base: 6},
+			want:  36.0,
+		},
 	}
 
-	for _, test := range areaTests {
-		got := test.shape.Area()
-		want := test.want
-		if got != want {
-			t.Errorf("got %g want %g", got, want)
-		}
+	for _, tt := range areaTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.shape.Area()
+			want := tt.want
+			if got != want {
+				t.Errorf("%#v got %g want %g", tt.shape, got, want)
+			}
+		})
 	}
 }
