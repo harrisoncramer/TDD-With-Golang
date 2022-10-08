@@ -3,6 +3,7 @@ package sum
 import "testing"
 
 func AssertTestPassing(got int, want int, t *testing.T) {
+	t.Helper()
 	if got != want {
 		t.Errorf("got %d want %d", got, want)
 	}

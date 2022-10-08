@@ -6,17 +6,17 @@ import (
 )
 
 func assertTestPassing(got string, want string, t *testing.T) {
+	t.Helper()
 	if got != want {
 		t.Errorf("got %q want %q", got, want)
 	}
-	t.Helper()
 }
 
 func assertTestPassingSlice(got []string, want []string, t *testing.T) {
+	t.Helper()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %q want %q", got, want)
 	}
-	t.Helper()
 }
 
 // Returns a string that repeats the first argument n times
@@ -64,9 +64,12 @@ func TestWords(t *testing.T) {
 	})
 }
 
-/* We can benchmark the performance of an operation, Golang determines
+/*
+	We can benchmark the performance of an operation, Golang determines
+
 how many times to run the function to return a good benchmark.
-We can run them with: go test -bench=. */
+We can run them with: go test -bench=.
+*/
 func BenchmarkIterate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Iterate("q", 10)

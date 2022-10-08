@@ -1,40 +1,55 @@
 package geometry
 
-import "testing"
+import (
+	"testing"
+)
 
-func AssertTestPassing(got float64, want float64, t *testing.T) {
-	if got != want {
-		t.Errorf("got %2.f want %2.f", got, want)
+func TestPerimeter(t *testing.T) {
+	checkPerimeter := func(t *testing.T, shape Shape, want float64) {
+		t.Helper()
+		got := shape.Perimeter()
+		if got != want {
+			t.Errorf("got %g want %g", got, want)
+		}
 	}
+
+	t.Run("Rectangles", func(t *testing.T) {
+		rectangle := Rectangle{20.0, 5.0}
+		checkPerimeter(t, rectangle, 50.0)
+	})
+
+	t.Run("Circles", func(t *testing.T) {
+		circle := Circle{34.03}
+		checkPerimeter(t, circle, 213.81679600332131)
+	})
 }
 
-func AssertTestPassingPrecise(got float64, want float64, t *testing.T) {
+func checkArea(t *testing.T, shape Shape, want float64) {
+	t.Helper()
+	got := shape.Area()
 	if got != want {
 		t.Errorf("got %g want %g", got, want)
 	}
 }
 
-func TestPerimeter(t *testing.T) {
-	rectangle := Rectangle{20.0, 5.0}
-	got := Perimeter(rectangle)
-	want := 50.0
-	AssertTestPassing(got, want, t)
-}
-
 func TestArea(t *testing.T) {
-	t.Run("Rectangles", func(t *testing.T) {
-		rectangle := Rectangle{10.0, 3.0}
-		got := rectangle.Area()
-		want := 30.0
-		AssertTestPassing(got, want, t)
-	})
 
-	t.Run("Circles", func(t *testing.T) {
-		circle := Circle{
-			Radius: 3.0,
+	/* Table testing is a common approach in
+	Golang, we could also iterate over a struct
+	and use the keys as the test names: https://github.com/golang/go/wiki/TableDrivenTests */
+	areaTests := []struct {
+		shape Shape
+		want  float64
+	}{
+		{shape: Rectangle{10.0, 3.0}, want: 30.0},
+		{shape: Circle{3.0}, want: 28.274333882308138},
+	}
+
+	for _, test := range areaTests {
+		got := test.shape.Area()
+		want := test.want
+		if got != want {
+			t.Errorf("got %g want %g", got, want)
 		}
-		got := circle.Area()
-		want := 28.274333882308138
-		AssertTestPassingPrecise(got, want, t)
-	})
+	}
 }
