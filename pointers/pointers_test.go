@@ -47,6 +47,8 @@ func assertError(t testing.TB, got error, want error) {
 		t.Fatal("wanted err but didn't get one")
 	}
 
+	/* Comparing error strings is not best practice because the errors
+	can be wrapped, or the string can change */
 	if got.Error() != want.Error() {
 		t.Errorf("wanted error msg %q, got error msg %q", got, want)
 	}
