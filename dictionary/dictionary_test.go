@@ -44,7 +44,7 @@ func TestDefine(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	t.Run("Should throw if the map is nil", func(t *testing.T) {
 		dictionary := Dictionary(nil)
-		err := dictionary.Define("ice", "frozen water")
+		_, err := dictionary.Update("ice", "frozen water")
 		assertError(t, err, ErrDictUndefined)
 	})
 
@@ -63,6 +63,29 @@ func TestUpdate(t *testing.T) {
 		want := "a rapper"
 		assertNoError(t, err)
 		assertTestPassing(t, newDefinition, want)
+	})
+}
+
+func TestDelete(t *testing.T) {
+	t.Run("Should throw if the map is nil", func(t *testing.T) {
+		dictionary := Dictionary(nil)
+		_, err := dictionary.Delete("ice")
+		assertError(t, err, ErrDictUndefined)
+	})
+
+	t.Run("Should throw if the word is not defined", func(t *testing.T) {
+		dictionary := Dictionary{}
+		_, err := dictionary.Delete("ice")
+		assertError(t, err, ErrWordNotFound)
+	})
+
+	t.Run("Should delete an existing word", func(t *testing.T) {
+		dictionary := Dictionary{"ice": "frozen water"}
+		got, err := dictionary.Delete("ice")
+		assertNoError(t, err)
+		want := "frozen water"
+		assertTestPassing(t, got, want)
+
 	})
 }
 

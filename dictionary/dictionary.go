@@ -45,6 +45,9 @@ func (dict Dictionary) Define(word string, definition string) (err error) {
 }
 
 func (dict Dictionary) Update(word string, definition string) (newDefinition string, err error) {
+	if dict == nil {
+		return "", ErrDictUndefined
+	}
 	_, searchError := dict.Search(word)
 	if searchError != nil {
 		return "", searchError
@@ -52,4 +55,19 @@ func (dict Dictionary) Update(word string, definition string) (newDefinition str
 
 	dict[word] = definition
 	return definition, nil
+}
+
+func (dict Dictionary) Delete(word string) (oldDefinition string, err error) {
+	if dict == nil {
+		return "", ErrDictUndefined
+	}
+
+	oldDefinition, searchError := dict.Search(word)
+	if searchError != nil {
+		return "", searchError
+	}
+
+	dict[word] = ""
+
+	return oldDefinition, nil
 }
