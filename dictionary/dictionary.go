@@ -43,3 +43,13 @@ func (dict Dictionary) Define(word string, definition string) (err error) {
 	dict[word] = definition
 	return nil
 }
+
+func (dict Dictionary) Update(word string, definition string) (newDefinition string, err error) {
+	_, searchError := dict.Search(word)
+	if searchError != nil {
+		return "", searchError
+	}
+
+	dict[word] = definition
+	return definition, nil
+}

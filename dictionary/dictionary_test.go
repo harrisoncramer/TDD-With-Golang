@@ -3,7 +3,6 @@ package dictionary
 import "testing"
 
 func TestSearch(t *testing.T) {
-
 	t.Run("Should find valid word", func(t *testing.T) {
 		dictionary := Dictionary{"test": "This is a test"}
 		got, err := dictionary.Search("test")
@@ -25,7 +24,6 @@ func TestDefine(t *testing.T) {
 		dictionary := Dictionary{}
 		dictionary.Define("ice", "frozen water")
 		got, err := dictionary.Search("ice")
-
 		assertNoError(t, err)
 		assertTestPassing(t, got, "frozen water")
 	})
@@ -40,6 +38,31 @@ func TestDefine(t *testing.T) {
 		dictionary := Dictionary{"test": "This is a test"}
 		err := dictionary.Define("test", "some new value")
 		assertError(t, err, ErrWordExists("test", "This is a test"))
+	})
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("Should throw if the map is nil", func(t *testing.T) {
+		dictionary := Dictionary(nil)
+		err := dictionary.Define("ice", "frozen water")
+		assertError(t, err, ErrDictUndefined)
+	})
+
+	t.Run("Should throw if the word doesn't exist", func(t *testing.T) {
+		dictionary := Dictionary{}
+		_, err := dictionary.Update("ice", "a rapper")
+		assertError(t, err, ErrWordNotFound)
+	})
+
+	t.Run("Should update an existing word", func(t *testing.T) {
+		dictionary := Dictionary{}
+		dictionary.Define("ice", "frozen water")
+		newDefinition, err := dictionary.Update("ice", "a rapper")
+		assertNoError(t, err)
+
+		want := "a rapper"
+		assertNoError(t, err)
+		assertTestPassing(t, newDefinition, want)
 	})
 }
 
