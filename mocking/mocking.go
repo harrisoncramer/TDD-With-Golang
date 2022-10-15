@@ -16,13 +16,13 @@ has a Sleep method. But when testing, we pass in a mock that spys on this
 Sleep method.
 */
 type Sleeper interface {
-	Sleep(time int)
+	Sleep()
 }
 
 func Countdown(b io.Writer, sleeper Sleeper) {
 	for i := 3; i > 0; i-- {
 		fmt.Fprintln(b, fmt.Sprint(i))
-		sleeper.Sleep(1)
+		sleeper.Sleep()
 	}
 	fmt.Fprint(b, "go!")
 }
