@@ -2,6 +2,10 @@ package reflection
 
 import "reflect"
 
+/*
+Reflection can be used to interact with data
+where the types of the data is not known at compile time.
+*/
 func walk(x interface{}, f func(s string)) {
 
 	val := getValue(x)
@@ -9,6 +13,7 @@ func walk(x interface{}, f func(s string)) {
 	switch val.Kind() {
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < val.Len(); i++ {
+			/* The interface method returns the underlying value */
 			walk(val.Index(i).Interface(), f)
 		}
 	case reflect.Map:
