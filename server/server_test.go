@@ -6,44 +6,35 @@ import (
 	"testing"
 )
 
-func TestPlayerServer(t *testing.T) {
-	t.Run("Handler returns the player's score", func(t *testing.T) {
+func assertResponseBody(t *testing.T, got string, want string) {
+	if got != want {
+		t.Fatalf("got %q but want %q", got, want)
+	}
+}
 
-		want := "20"
-		request, _ := http.NewRequest(http.MethodGet, "/players/me", nil)
+func TestGETPlayers(t *testing.T) {
 
-		/* Returns a special response writer spy that records
-				   the outuput for later inspection by tests,
-		       on response.Body.String() */
+	server := &PlayerServer{
+		Store: &StubPlayerStore{
+			scores: map[string]int{
+				"peter": 10,
+				"harry": 20,
+			},
+		},
+	}
+
+	t.Run("Should return Peter's score", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodGet, "/players/peter", nil)
 		response := httptest.NewRecorder()
 
-		/*
-		 PlayerServer implements the Handler interface:
-		 type Handler interface {
-		   ServeHTTP (ResponseWriter, *Request)
-		 }
-		*/
-		PlayerServer(response, request)
-
-		got := response.Body.String()
-
-		if got != want {
-			t.Errorf("got %q want %q", got, want)
-		}
+		server.ServeHTTP(response, request)
+		assertResponseBody(t, response.Body.String(), "10")
 	})
-
-	t.Run("Handler returns another player's score", func(t *testing.T) {
-		want := "10"
-		request, _ := http.NewRequest(http.MethodGet, "/players/you", nil)
+	t.Run("Should return Harry's score", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodGet, "/players/harry", nil)
 		response := httptest.NewRecorder()
 
-		PlayerServer(response, request)
-
-		got := response.Body.String()
-
-		if got != want {
-			t.Errorf("got %q want %q", got, want)
-		}
-
+		server.ServeHTTP(response, request)
+		assertResponseBody(t, response.Body.String(), "20")
 	})
 }
