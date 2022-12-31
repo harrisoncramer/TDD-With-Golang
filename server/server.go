@@ -10,10 +10,16 @@ import (
 
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
+	RecordWin(name string)
 }
 
 type StubPlayerStore struct {
-	scores map[string]int
+	scores   map[string]int
+	winCalls []string
+}
+
+func (s *StubPlayerStore) RecordWin(name string) {
+	s.winCalls = append(s.winCalls, name)
 }
 
 func (s *StubPlayerStore) GetPlayerScore(name string) (int, error) {
@@ -33,14 +39,16 @@ func (p *PlayerServer) showScore(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 	score, err := p.Store.GetPlayerScore(player)
 	if err != nil {
-		w.WriteHeader(404)
+		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, err.Error())
 		return
 	}
 	fmt.Fprint(w, score)
 }
-func (p *PlayerServer) updateScore(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(200)
+func (p *PlayerServer) processWin(w http.ResponseWriter, r *http.Request) {
+	playerName := strings.TrimPrefix(r.URL.Path, "/players/")
+	p.Store.RecordWin(playerName)
+	w.WriteHeader(http.StatusOK)
 }
 
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -48,6 +56,6 @@ func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		p.showScore(w, r)
 	case http.MethodPost:
-		p.updateScore(w, r)
+		p.processWin(w, r)
 	}
 }

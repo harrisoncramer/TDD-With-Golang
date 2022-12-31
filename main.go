@@ -15,10 +15,10 @@ func (i *InMemoryScoreDB) GetPlayerScore(name string) (int, error) {
 	return 123, nil
 }
 
+func (i *InMemoryScoreDB) RecordWin(name string) {}
+
 func main() {
-	server := &server.PlayerServer{
-		Store: &InMemoryScoreDB{},
-	}
+	server := &server.PlayerServer{&InMemoryScoreDB{}}
 
 	handler := http.HandlerFunc(server.ServeHTTP)
 	fmt.Printf("Listening on port :%d", port)
