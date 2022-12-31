@@ -11,8 +11,8 @@ type InMemoryScoreDB struct{}
 
 const port = 3000
 
-func (i *InMemoryScoreDB) GetPlayerScore(name string) int {
-	return 123
+func (i *InMemoryScoreDB) GetPlayerScore(name string) (int, error) {
+	return 123, nil
 }
 
 func main() {
